@@ -7,7 +7,23 @@ class PostController {
       return res.json({ "posts": posts });
     } catch (error) {
       console.error(error);
-      res.status(400)
+      res.status(404);
+    }
+  }
+
+  createPost = async (req, res) => {
+    try {
+      const post = await prisma.post.create({
+        data: {
+          title: req.body.title,
+          body: req.body.body,
+        }
+      });
+
+      return res.json({ "message": "Post successfully created" });
+    } catch (error) {
+      console.error(error);
+      return res.status(404);
     }
   }
 }
