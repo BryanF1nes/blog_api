@@ -9,12 +9,31 @@ class PostController {
       console.error(error);
       res.status(404).message('Unable to get posts.');
     }
+  };
+
+  getPost = async (req, res) => {
+    try {
+      const { postId } = req.params;
+      const post = await prisma.post.findFirstOrThrow({
+        where: {
+          id: Number(postId),
+        },
+        include: {
+          comments: true,
+        }
+      });
+
+      return res.json({ "post": post })
+    } catch (error) {
+      console.error(error);
+      return res.status(404).message('Unable to get post.');
+    }
   }
 
   // TODO: Will require authorization using JWT and authentication using Passport
   createPost = async (req, res) => {
     try {
-      const post = await prisma.post.create({
+      await prisma.post.create({
         data: {
           title: req.body.title,
           body: req.body.body,
@@ -28,12 +47,12 @@ class PostController {
     }
   }
 
-  authorPost = async (req, res) => {
+  publishPost = async (req, res) => {
     try {
       const { postId } = req.params;
       const post = await prisma.post.findFirstOrThrow({
         where: {
-          id: postId
+          id: Number(postId)
         }
       });
       if (post.published === false) {

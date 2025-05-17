@@ -148,12 +148,12 @@ exports.Prisma.CommentScalarFieldEnum = {
   id: 'id',
   body: 'body',
   createdAt: 'createdAt',
-  authorId: 'authorId'
+  authorId: 'authorId',
+  postId: 'postId'
 };
 
 exports.Prisma.FavoriteScalarFieldEnum = {
-  id: 'id',
-  postId: 'postId'
+  id: 'id'
 };
 
 exports.Prisma.SortOrder = {
@@ -164,6 +164,11 @@ exports.Prisma.SortOrder = {
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
 };
 
 
