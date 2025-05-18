@@ -1,4 +1,6 @@
 import prisma from "../utils/prisma.js";
+import verifyToken from '../utils/verifyToken.js';
+import jwt from 'jsonwebtoken';
 
 class PostController {
   getPosts = async (req, res) => {
@@ -32,19 +34,19 @@ class PostController {
 
   // TODO: Will require authorization using JWT and authentication using Passport
   createPost = async (req, res) => {
-    try {
+    jwt.verify(req.token, `${process.env.SECRET}`, async (error, authData) => {
+      if (error) {
+        return res.status(403);
+      }
       await prisma.post.create({
         data: {
           title: req.body.title,
           body: req.body.body,
+          authorId: authData.user.id
         }
       });
-
-      return res.json({ "message": "Post successfully created" });
-    } catch (error) {
-      console.error(error);
-      return res.status(404).message('Unable to create post.');
-    }
+      return res.json({ "message": "Post successfully created", authData });
+    });
   }
 
   publishPost = async (req, res) => {
