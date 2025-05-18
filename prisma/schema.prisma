@@ -57,3 +57,10 @@ model Comment {
 model Favorite {
   id Int @id @default(autoincrement())
 }
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+}

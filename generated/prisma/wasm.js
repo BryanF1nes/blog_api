@@ -156,6 +156,13 @@ exports.Prisma.FavoriteScalarFieldEnum = {
   id: 'id'
 };
 
+exports.Prisma.SessionScalarFieldEnum = {
+  id: 'id',
+  sid: 'sid',
+  data: 'data',
+  expiresAt: 'expiresAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -177,7 +184,8 @@ exports.Prisma.ModelName = {
   Profile: 'Profile',
   Post: 'Post',
   Comment: 'Comment',
-  Favorite: 'Favorite'
+  Favorite: 'Favorite',
+  Session: 'Session'
 };
 
 /**
