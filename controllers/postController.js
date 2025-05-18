@@ -47,6 +47,24 @@ class PostController {
     });
   }
 
+  createComment = async (req, res) => {
+    jwt.verify(req.token, `${process.env.SECRET}`, async (error, authData) => {
+      if (error) {
+        return res.status(403);
+      }
+      const { postId } = req.params;
+
+      await prisma.comment.create({
+        data: {
+          body: req.body.body,
+          postId: Number(postId),
+          authorId: authData.user.id
+        }
+      });
+      return res.json({ "message": "Comment successfully created", authData });
+    })
+  }
+
   publishPost = async (req, res) => {
     jwt.verify(req.token, `${process.env.SECRET}`, async (error, authData) => {
       if (error) {

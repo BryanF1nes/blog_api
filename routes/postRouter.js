@@ -7,6 +7,7 @@ postRouter.get('/', postController.getPosts);
 postRouter.get('/:postId', postController.getPost);
 
 postRouter.post('/', verifyToken, postController.createPost);
-postRouter.post('/publish/:postId', postController.publishPost);
+postRouter.post('/publish/:postId', verifyToken, postController.publishPost);
+postRouter.post('/:postId/comment', verifyToken, postController.createComment);
 
 export default postRouter;

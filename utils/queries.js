@@ -3,17 +3,16 @@ import { PrismaClient } from "../generated/prisma/client.js";
 const prisma = new PrismaClient()
 
 async function main() {
-  const posts = await prisma.post.findMany();
-  const user = await prisma.user.findFirst({
+  const post = await prisma.post.findFirst({
     where: {
-      username: "Bryan"
+      id: Number(2),
     },
     include: {
-      posts: true
+      comments: true
     }
   });
 
-  console.log(posts);
+  console.log(post);
 }
 
 main().then(async () => {

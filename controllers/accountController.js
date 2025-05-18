@@ -16,7 +16,7 @@ class AccountController {
       const match = await bcrypt.compare(req.body.password, user.password);
       if (!match) return done(null, false, { message: "Incorrect password" });
 
-      jwt.sign({ user: user }, `${process.env.SECRET}`, (error, token) => {
+      jwt.sign({ user: user }, `${process.env.SECRET}`, { expiresIn: '2 days' }, (error, token) => {
         res.json({
           token: token
         })
@@ -28,7 +28,6 @@ class AccountController {
   }
 
   logout = async (req, res) => {
-    // TODO: Logout stuff.
     req.logoout((error) => {
       if (error) return next(error);
       res.status(200).redirect("/login");
@@ -36,7 +35,6 @@ class AccountController {
   }
 
   signup = async (req, res, next) => {
-    // TODO: Sign in stuff.
     try {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
