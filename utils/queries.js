@@ -3,6 +3,7 @@ import { PrismaClient } from "../generated/prisma/client.js";
 const prisma = new PrismaClient()
 
 async function main() {
+  const posts = await prisma.post.findMany();
   const user = await prisma.user.findFirst({
     where: {
       username: "Bryan"
@@ -12,7 +13,7 @@ async function main() {
     }
   });
 
-  console.log(user);
+  console.log(posts);
 }
 
 main().then(async () => {

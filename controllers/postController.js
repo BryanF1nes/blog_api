@@ -1,5 +1,4 @@
 import prisma from "../utils/prisma.js";
-import verifyToken from '../utils/verifyToken.js';
 import jwt from 'jsonwebtoken';
 
 class PostController {
@@ -32,7 +31,6 @@ class PostController {
     }
   }
 
-  // TODO: Will require authorization using JWT and authentication using Passport
   createPost = async (req, res) => {
     jwt.verify(req.token, `${process.env.SECRET}`, async (error, authData) => {
       if (error) {
@@ -50,7 +48,10 @@ class PostController {
   }
 
   publishPost = async (req, res) => {
-    try {
+    jwt.verify(req.token, `${process.env.SECRET}`, async (error, authData) => {
+      if (error) {
+        return res.status(403);
+      };
       const { postId } = req.params;
       const post = await prisma.post.findFirstOrThrow({
         where: {
@@ -58,15 +59,14 @@ class PostController {
         }
       });
       if (post.published === false) {
-        post.published = true;
+        await prisma.post.update({
+          where: { id: Number(postId) },
+          data: { published: true }
+        })
       };
 
-      return res.status(200).message(`Post ${post.title} has been published.`);
-    } catch (error) {
-      console.error(error);
-
-      return res.status(404).message('Unable to publish your post.');
-    }
+      return res.status(200).json({ message: `Post ${post.title} has been published.`, authData });
+    })
   }
 }
 
