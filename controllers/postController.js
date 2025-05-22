@@ -34,16 +34,21 @@ class PostController {
   createPost = async (req, res) => {
     jwt.verify(req.token, `${process.env.SECRET}`, async (error, authData) => {
       if (error) {
-        return res.status(403);
+        return res.status(403)
       }
-      await prisma.post.create({
-        data: {
-          title: req.body.title,
-          body: req.body.body,
-          authorId: authData.user.id
-        }
-      });
-      return res.json({ "message": "Post successfully created", authData });
+
+      if (authData.user.isAdmin) {
+        await prisma.post.create({
+          data: {
+            title: req.body.title,
+            body: req.body.body,
+            authorId: authData.user.id
+          }
+        });
+        return res.status(200).json({ "message": "Post successfully created", authData });
+      }
+
+      return res.status(403).json({ "message": "You are not authorized to post a blog.", authData })
     });
   }
 

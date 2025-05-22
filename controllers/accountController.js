@@ -16,7 +16,15 @@ class AccountController {
       const match = await bcrypt.compare(req.body.password, user.password);
       if (!match) return done(null, false, { message: "Incorrect password" });
 
-      jwt.sign({ user: user }, `${process.env.SECRET}`, { expiresIn: '2 days' }, (error, token) => {
+      if (user.isAdmin === true) {
+        jwt.sign({ user: user, isAdmin: true }, `${process.env.SECRET}`, { expiresIn: '2 days' }, (error, token) => {
+          return res.json({
+            token: token
+          })
+
+        })
+      }
+      jwt.sign({ user: user, isAdmin: false }, `${process.env.SECRET}`, { expiresIn: '2 days' }, (error, token) => {
         res.json({
           token: token
         })
@@ -45,7 +53,7 @@ class AccountController {
         }
       });
 
-      return res.status(200).res.json({ message: "Account created." })
+      return res.json({ message: "Account created." })
     } catch (error) {
       console.error(error);
       next(error);
